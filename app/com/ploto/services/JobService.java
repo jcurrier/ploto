@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ploto.services.store.JobServiceStore;
 import com.ploto.settings.PlotoSettings;
+import com.ploto.util.PlotoContext;
 import play.Play;
 
 /**
@@ -22,7 +23,7 @@ public class JobService {
 
     @Inject
     private JobService() {
-        mJobServiceStore = PlotoSettings.getInjector().getInstance(JobServiceStore.class);
+        mJobServiceStore = PlotoContext.getInjector().getInstance(JobServiceStore.class);
     }
 
     /*
