@@ -25,4 +25,12 @@ public class JobServiceTest {
 
         jobSvc.CreateJob(new Job(1, "title", "description", "location"));
     }
+
+    @Test
+    public void removeJobTest() {
+
+        JobService jobSvc = mCtx.getInjector().getInstance(JobService.class);
+
+        jobSvc.CreateJob(new Job(1, "title", "description", "location"));
+    }
 }
