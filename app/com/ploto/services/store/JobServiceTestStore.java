@@ -40,7 +40,6 @@ public class JobServiceTestStore implements JobServiceStore {
     @Override
     public ImmutableList<Job> FetchOpenPositions() {
 
-        return mJobMap.values();
         return null;
     }
 }
