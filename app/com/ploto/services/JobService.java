@@ -26,18 +26,6 @@ public class JobService {
         mJobServiceStore = PlotoContext.getInjector().getInstance(JobServiceStore.class);
     }
 
-    /*
-    public static JobService Instance() {
-
-        // BUGBUG: Rip this out and replace with dependency injection later.
-        if(mInstance == null) {
-            mInstance = new JobService();
-        }
-
-        return mInstance;
-    }
-    */
-
     public void CreateJob(Job newJob) {
         // Validate our input parameters.
         Preconditions.checkNotNull(newJob);
