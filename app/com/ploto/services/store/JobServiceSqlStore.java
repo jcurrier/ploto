@@ -27,7 +27,7 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
 
     @Inject
     private JobServiceSqlStore() {
-        
+
     }
 
     @Override

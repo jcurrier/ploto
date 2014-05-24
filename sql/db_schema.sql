@@ -12,7 +12,7 @@ create table if not exists position (
   description      text,
   location         varchar(128),
   status           tinyint,
-  posted           datetime default now(),
+  posted           datetime,
   last_updated     timestamp default now(),
   constraint pk_position primary key (id)
 );
@@ -20,9 +20,8 @@ create table if not exists position (
 create table if not exists user (
   email            varchar(255),
   password         varchar(255),
-  created_on       datetime,
-  last_updated     timestamp,
-  is_active        boolean,
+  last_updated     timestamp default now(),
+  is_active        boolean default true,
   constraint pk_user primary key (email)
 );
 
@@ -30,15 +29,16 @@ create table if not exists applicant (
   email            varchar(255) not null,
   resume_url       varchar(255) not null,
   is_active        boolean,
-  last_updated     timestamp,
+  last_updated     timestamp default now(),
   constraint pk_applicant primary key (email)
 );
 
 create table if not exists job_submission (
-  position_id         varchar(255) not null,
-  applicant_id        varchar(255) not null,
-  recruiter           varchar(255) not null,
-  hiring_mgr          varchar(255) not null,
+  position_id      varchar(255) not null,
+  applicant_id     varchar(255) not null,
+  recruiter        varchar(255) not null,
+  hiring_mgr       varchar(255) not null,
+  applied_on       timestamp,
   constraint pk_job_submission primary key (position_id, applicant_id),
   foreign key (position_id) references position (id),
   foreign key (applicant_id) references applicant (email),
