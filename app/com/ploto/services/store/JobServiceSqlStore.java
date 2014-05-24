@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import com.ploto.services.Position;
 
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
 
     @Inject
     private JobServiceSqlStore() {
-        System.out.println("In ctor of JobServiceSqlStore");
+        
     }
 
     @Override
@@ -48,11 +49,11 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
 
             int rowCount = ps.executeUpdate();
             if(rowCount != 1) {
-                // throw here.
+                throw new StoreException("Failed to create position");
             }
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            throw new StoreException("Unable to create position", ex);
 
         } finally {
         }
@@ -76,8 +77,7 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
             }
 
         } catch(SQLException ex) {
-            ex.printStackTrace();
-
+            throw new StoreException("Unable to remove position", ex);
         } finally {
         }
     }
@@ -87,7 +87,7 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
         return null;
     }
 
-    private Position fetchPosition(String id) {
+    private Position fetchPosition(String id) throws StoreException {
         Position pos = null;
         Connection dbConn = null;
 
@@ -107,8 +107,7 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
                     results.getTimestamp("last_updated"));
 
         } catch(Exception ex) {
-            ex.printStackTrace();
-
+            throw new StoreException("Unable to retrieve position", ex);
         } finally {
         }
 
