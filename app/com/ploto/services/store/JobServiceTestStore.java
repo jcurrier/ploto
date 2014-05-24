@@ -24,17 +24,19 @@ public class JobServiceTestStore implements JobServiceStore {
     }
 
     @Override
-    public void StoreJob(Position newPosition) {
+    public Position storeJob(Position newPosition) {
+
         mJobMap.put(newPosition.getId(), newPosition);
+        return newPosition;
     }
 
     @Override
-    public void RemoveJob(Position positionToRemove) {
+    public void removeJob(Position positionToRemove) {
 
     }
 
     @Override
-    public ImmutableList<Position> FetchOpenPositions() {
+    public ImmutableList<Position> fetchOpenPositions() {
 
         return null;
     }

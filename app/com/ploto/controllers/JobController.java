@@ -16,7 +16,7 @@ public class JobController extends Controller {
 
         JobService jobSvc = PlotoContext.getInjector().getInstance(JobService.class);
 
-        jobSvc.CreatePosition(new Position("title", "description", "location"));
+        jobSvc.createPosition(new Position("title", "description", "location"));
         return ok(index.render("Your new application is ready."));
     }
 }

@@ -13,7 +13,7 @@ create table if not exists position (
   location         varchar(128),
   status           tinyint,
   posted           datetime default now(),
-  last_updated     timestamp,
+  last_updated     timestamp default now(),
   constraint pk_position primary key (id)
 );
 

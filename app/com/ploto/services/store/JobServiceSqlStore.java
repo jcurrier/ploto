@@ -1,5 +1,6 @@
 package com.ploto.services.store;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -7,6 +8,8 @@ import com.ploto.services.Position;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by jeff on 5/18/14.
@@ -15,10 +18,11 @@ import java.sql.PreparedStatement;
 public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore {
 
     private final String CREATE_JOB =
-            "INSERT INTO position(id, title, description, location, status)" +
-            "VALUES(?, ?, ?, ?, ?);";
+            "INSERT INTO position (id, title, description, location, status) VALUES(?, ?, ?, ?, ?)";
 
-    private final String REMOVE_JOB = "DELETE FROM position WHERE id = ?;";
+    private final String REMOVE_JOB = "DELETE FROM position WHERE id = ?";
+
+    private final String FETCH_JOB = "SELECT * FROM position WHERE id = ? LIMIT 1";
 
     @Inject
     private JobServiceSqlStore() {
@@ -26,41 +30,88 @@ public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore 
     }
 
     @Override
-    public void StoreJob(Position newPosition) {
-        System.out.println("In JobServiceSqlStore");
+    public Position storeJob(Position newPosition) throws StoreException {
+        String positionId = generateUniqueId();
 
         Connection dbConn = null;
         try {
             dbConn = getConnection();
 
+            newPosition.setId(positionId);
             PreparedStatement ps = dbConn.prepareStatement(CREATE_JOB);
-            ps.setString(0, generateUniqueId());
-            ps.setString(1, newPosition.getTitle());
-            ps.setString(2, newPosition.getDescription());
-            ps.setString(3, newPosition.getLocation());
-            ps.setShort(4, newPosition.getStatus());
 
-            ps.execute();
-            int updateCount = ps.getUpdateCount();
-            System.out.println("updateCount == " + updateCount);
+            ps.setString(1, newPosition.getId());
+            ps.setString(2, newPosition.getTitle());
+            ps.setString(3, newPosition.getDescription());
+            ps.setString(4, newPosition.getLocation());
+            ps.setShort(5, newPosition.getStatus());
+
+            int rowCount = ps.executeUpdate();
+            if(rowCount != 1) {
+                // throw here.
+            }
 
         } catch(Exception ex) {
             ex.printStackTrace();
 
         } finally {
-            if(dbConn != null) {
-                //dbConn.close();
+        }
+
+        return fetchPosition(positionId);
+    }
+
+    @Override
+    public void removeJob(Position positionToRemove) throws StoreException {
+        Connection dbConn = null;
+        try {
+            dbConn = getConnection();
+
+            PreparedStatement ps = dbConn.prepareStatement(REMOVE_JOB);
+
+            ps.setString(1, positionToRemove.getId());
+
+            int rowCount = ps.executeUpdate();
+            if(rowCount !=1) {
+                throw new StoreException("Position not found");
             }
+
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+
+        } finally {
         }
     }
 
     @Override
-    public void RemoveJob(Position positionToRemove) {
-
+    public ImmutableList<Position> fetchOpenPositions() throws StoreException {
+        return null;
     }
 
-    @Override
-    public ImmutableList<Position> FetchOpenPositions() {
-        return null;
+    private Position fetchPosition(String id) {
+        Position pos = null;
+        Connection dbConn = null;
+
+        Preconditions.checkArgument(id != null && id.length() > 0, "Invalid position id passed");
+
+        try {
+            dbConn = getConnection();
+
+            PreparedStatement ps = dbConn.prepareStatement(FETCH_JOB);
+            ps.setString(1, id);
+
+            ResultSet results  = ps.executeQuery();
+            results.first();
+
+            pos = new Position(results.getString("id"), results.getString("title"), results.getString("description"),
+                    results.getString("location"), results.getShort("status"), results.getTimestamp("posted"),
+                    results.getTimestamp("last_updated"));
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+
+        } finally {
+        }
+
+        return pos;
     }
 }

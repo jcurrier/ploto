@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ploto.services.store.JobServiceStore;
+import com.ploto.services.store.StoreException;
 import com.ploto.util.PlotoContext;
 
 /**
@@ -13,8 +14,6 @@ import com.ploto.util.PlotoContext;
  */
 @Singleton
 public class JobService {
-
-    private static JobService mInstance = null;
 
     @Inject
     private JobServiceStore mJobServiceStore;
@@ -24,7 +23,7 @@ public class JobService {
         mJobServiceStore = PlotoContext.getInjector().getInstance(JobServiceStore.class);
     }
 
-    public void CreatePosition(Position newPosition) {
+    public Position createPosition(Position newPosition) {
         // Validate our input parameters.
         Preconditions.checkNotNull(newPosition);
         Preconditions.checkState(newPosition.getTitle() != null && newPosition.getTitle().length() > 1,
@@ -34,20 +33,31 @@ public class JobService {
         Preconditions.checkState(newPosition.getLocation() != null && newPosition.getLocation().length() > 1,
                 "Invalid Job Location");
 
-        mJobServiceStore.StoreJob(newPosition);
+        Position pos = null;
 
+        try {
+            pos = mJobServiceStore.storeJob(newPosition);
+        } catch(StoreException ex) {
+
+        }
+
+        return pos;
     }
 
-    public void RemovePosition(Position positionToRemove) {
+    public void removePosition(Position positionToRemove) {
         // Validate our input parameters.
         Preconditions.checkNotNull(positionToRemove);
         Preconditions.checkState(positionToRemove.getId() != null && positionToRemove.getId().length() > 1,
                 "Invalid Job ID");
 
-        mJobServiceStore.RemoveJob(positionToRemove);
+        try {
+            mJobServiceStore.removeJob(positionToRemove);
+        }catch (StoreException ex) {
+
+        }
     }
 
-    public ImmutableList<Position> FetchOpenPositions() {
+    public ImmutableList<Position> fetchOpenPositions() {
 
         return null;
     }

@@ -2,13 +2,18 @@ package com.ploto.services.test;
 
 import com.ploto.services.Position;
 import com.ploto.services.JobService;
+import com.ploto.services.store.StoreException;
 import com.ploto.util.PlotoContext;
+
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import play.test.FakeApplication;
 import play.test.Helpers;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,23 +39,61 @@ public class JobServiceTest {
     }
 
     @Test
-    public void newJobTest() {
+    public void createAndRemoveJobTest() {
+        String title = "position title";
+        String desc = "job description";
+        String location = "Seattle, WA";
+        Date posted = new Date(System.currentTimeMillis());
+        Date lastUpdate = new Date(System.currentTimeMillis());
 
         JobService jobSvc = mCtx.getInjector().getInstance(JobService.class);
 
-        jobSvc.CreatePosition(new Position("title", "description", "location"));
-    }
+        // First, create a job.
+        Position p = jobSvc.createPosition(new Position(title, desc, location));
+        Assert.assertEquals(p.getTitle(), title);
+        Assert.assertEquals(p.getDescription(), desc);
+        Assert.assertEquals(p.getLocation(), location);
 
-    @Test
-    public void removeJobTest() {
+        // Next, simply remove it.
+        jobSvc.removePosition(p);
 
-        JobService jobSvc = mCtx.getInjector().getInstance(JobService.class);
+        // Now, try to create some invalid jobs.
+        try {
+            jobSvc.createPosition(null);
+            Assert.fail("didn't get expected exception on null paraneter");
+        }catch(Exception ex) {}
 
-        jobSvc.CreatePosition(new Position("title", "description", "location"));
+        Position testPos = new Position();
+        try {
+            testPos.setId("123");
+            jobSvc.createPosition(testPos);
+            Assert.fail("didn't get expected exception on null title");
+        }catch(Exception ex) {}
+
+        try {
+            testPos.setTitle("Title");
+            jobSvc.createPosition(testPos);
+            Assert.fail("didn't get expected exception on null description");
+        }catch(Exception ex) { }
+
+        try {
+            testPos.setDescription("Desc");
+            jobSvc.createPosition(testPos);
+            Assert.fail("didn't get expected exception on null location");
+        }catch(Exception ex) {}
+
+        // Finally, try to remove a job which doesn't exist.
+        /*
+        try {
+            jobSvc.removePosition(testPos);
+            Assert.fail("Expected to get exception and didn't");
+        } catch (Exception ex) {}
+        */
     }
 
     @AfterClass
     public static void tearDown() {
+
         if(mApp != null) {
             Helpers.stop(mApp);
         }

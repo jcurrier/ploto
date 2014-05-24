@@ -31,13 +31,19 @@ public class Position {
         return mTitle;
     }
 
+    public void setTitle(String title) { mTitle = title; }
+
     public String getDescription() {
         return mDescription;
     }
 
+    public void setDescription(String description) { mDescription = description; }
+
     public String getLocation() {
         return mLocation;
     }
+
+    public void setLocation(String location) { mLocation = location; }
 
     public short getStatus() { return mStatus; }
 
@@ -47,12 +53,15 @@ public class Position {
 
     public Position() { }
 
-    public Position(String id, String jobTitle, String description, String location) {
+    public Position(String id, String jobTitle, String description, String location, short status, Date datePosted,
+                    Date lastUpdated) {
         this.mId = id;
         this.mTitle = jobTitle;
         this.mDescription = description;
         this.mLocation = location;
-        this.mStatus = OPEN_STATUS;
+        this.mStatus = status;
+        this.mDatePosted = datePosted;
+        this.mLastUpdated = lastUpdated;
     }
 
     public Position(String jobTitle, String description, String location) {
