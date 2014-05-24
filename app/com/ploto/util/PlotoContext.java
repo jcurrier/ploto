@@ -15,6 +15,7 @@ public class PlotoContext {
     private static Injector mInjector = null;
 
     static {
+        /*
         mInjector = Guice.createInjector(new AbstractModule() {
 
             @Override
@@ -23,6 +24,8 @@ public class PlotoContext {
                 bind(JobService.class);
             }
         });
+        */
+        createProdBindings();
     }
 
     public static Injector getInjector() {
@@ -35,6 +38,17 @@ public class PlotoContext {
             @Override
             protected void configure() {
                 bind(JobServiceStore.class).to(JobServiceTestStore.class);
+                bind(JobService.class);
+            }
+        });
+    }
+
+    public static void createProdBindings() {
+        mInjector = Guice.createInjector(new AbstractModule() {
+
+            @Override
+            protected void configure() {
+                bind(JobServiceStore.class).to(JobServiceSqlStore.class);
                 bind(JobService.class);
             }
         });

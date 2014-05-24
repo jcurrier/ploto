@@ -1,16 +1,16 @@
 package com.ploto.services.store;
 
 import com.google.common.collect.ImmutableList;
-import com.ploto.services.Job;
+import com.ploto.services.Position;
 
 /**
  * Created by jeff on 5/18/14.
  */
 public interface JobServiceStore {
 
-    public void StoreJob(Job newJob);
+    public void StoreJob(Position newPosition);
 
-    public void RemoveJob(Job jobToRemove);
+    public void RemoveJob(Position positionToRemove);
 
-    public ImmutableList<Job> FetchOpenPositions();
+    public ImmutableList<Position> FetchOpenPositions();
 }

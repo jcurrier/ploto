@@ -1,8 +1,7 @@
 package com.ploto.controllers;
 
-import com.ploto.services.Job;
+import com.ploto.services.Position;
 import com.ploto.services.JobService;
-import com.ploto.settings.PlotoSettings;
 import com.ploto.util.PlotoContext;
 import com.ploto.views.html.index;
 import play.mvc.Controller;
@@ -17,7 +16,7 @@ public class JobController extends Controller {
 
         JobService jobSvc = PlotoContext.getInjector().getInstance(JobService.class);
 
-        jobSvc.CreateJob(new Job(1, "title", "description", "location"));
+        jobSvc.CreatePosition(new Position("title", "description", "location"));
         return ok(index.render("Your new application is ready."));
     }
 }

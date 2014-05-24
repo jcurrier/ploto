@@ -1,10 +1,16 @@
 package com.ploto.services.test;
 
-import com.ploto.services.Job;
+import com.ploto.services.Position;
 import com.ploto.services.JobService;
 import com.ploto.util.PlotoContext;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import play.test.FakeApplication;
+import play.test.Helpers;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jeff on 5/18/14.
@@ -12,10 +18,19 @@ import org.junit.Test;
 
 public class JobServiceTest {
     private static PlotoContext mCtx = new PlotoContext();
+    private static FakeApplication mApp = null;
 
     @BeforeClass
     public static void setup() {
-        PlotoContext.createTestBindings();
+
+        PlotoContext.createProdBindings();
+        Map<String, String> settings = new HashMap<String, String>();
+        settings.put("db.plotodb.driver", "com.mysql.jdbc.Driver");
+        settings.put("db.plotodb.url", "jdbc:mysql://localhost/plotodb");
+        settings.put("db.plotodb.user", "ploto");
+        settings.put("db.plotodb.password", "dev");
+        mApp = Helpers.fakeApplication(settings);
+        Helpers.start(mApp);
     }
 
     @Test
@@ -23,7 +38,7 @@ public class JobServiceTest {
 
         JobService jobSvc = mCtx.getInjector().getInstance(JobService.class);
 
-        jobSvc.CreateJob(new Job(1, "title", "description", "location"));
+        jobSvc.CreatePosition(new Position("title", "description", "location"));
     }
 
     @Test
@@ -31,6 +46,13 @@ public class JobServiceTest {
 
         JobService jobSvc = mCtx.getInjector().getInstance(JobService.class);
 
-        jobSvc.CreateJob(new Job(1, "title", "description", "location"));
+        jobSvc.CreatePosition(new Position("title", "description", "location"));
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        if(mApp != null) {
+            Helpers.stop(mApp);
+        }
     }
 }
