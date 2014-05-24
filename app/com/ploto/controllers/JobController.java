@@ -12,11 +12,11 @@ import play.mvc.Result;
  */
 public class JobController extends Controller {
 
-    public static Result index() {
+  public static Result index() {
 
-        JobService jobSvc = PlotoContext.getInjector().getInstance(JobService.class);
+    JobService jobSvc = PlotoContext.getInjector().getInstance(JobService.class);
 
-        jobSvc.createPosition(new Position("title", "description", "location"));
-        return ok(index.render("Your new application is ready."));
-    }
+    jobSvc.createPosition(new Position("title", "description", "location"));
+    return ok(index.render("Your new application is ready."));
+  }
 }

@@ -5,7 +5,7 @@ package com.ploto.services;
  */
 public interface CandidateService {
 
-    public void CreateCandidate(Candidate newCandidate);
+  public void CreateCandidate(Candidate newCandidate);
 
-    public void RemoveCandidate(Candidate candidateToRemove);
+  public void RemoveCandidate(Candidate candidateToRemove);
 }

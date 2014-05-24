@@ -9,51 +9,51 @@ import java.util.Date;
  */
 public class User {
 
-    private String mEmail=null;
-    private String mPassword=null;
-    private Boolean mIsActive = false;
-    private Date mLastUpdated = null;
+  private String mEmail = null;
+  private String mPassword = null;
+  private Boolean mIsActive = false;
+  private Date mLastUpdated = null;
 
-    public String getEmail() {
-        return mEmail;
-    }
+  public String getEmail() {
+    return mEmail;
+  }
 
-    public void setEmail(String email) {
-        Preconditions.checkArgument(email != null && email.length() > 0, "Invalid email");
-        Preconditions.checkArgument(email.contains("@"));
+  public void setEmail(String email) {
+    Preconditions.checkArgument(email != null && email.length() > 0, "Invalid email");
+    Preconditions.checkArgument(email.contains("@"));
 
-        this.mEmail = email;
-    }
+    this.mEmail = email;
+  }
 
-    public String getPassword() {
-        return mPassword;
-    }
+  public String getPassword() {
+    return mPassword;
+  }
 
-    public void setPassword(String password) {
-        Preconditions.checkArgument(password != null && password.length() > 0, "Invalid password");
-        this.mPassword = password;
-    }
+  public void setPassword(String password) {
+    Preconditions.checkArgument(password != null && password.length() > 0, "Invalid password");
+    this.mPassword = password;
+  }
 
-    public Boolean getIsActive() {
-        return mIsActive;
-    }
+  public Boolean getIsActive() {
+    return mIsActive;
+  }
 
-    public void setIsActive(Boolean verdict) {
-        this.mIsActive = verdict;
-    }
+  public void setIsActive(Boolean verdict) {
+    this.mIsActive = verdict;
+  }
 
-    public Date getLastUpdated() {
-        return mLastUpdated;
-    }
+  public Date getLastUpdated() {
+    return mLastUpdated;
+  }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.mLastUpdated = lastUpdated;
-    }
+  public void setLastUpdated(Date lastUpdated) {
+    this.mLastUpdated = lastUpdated;
+  }
 
-    public User(String email, String password, Boolean isActive, Date lastUpdated) {
-        this.mEmail = email;
-        this.mPassword = password;
-        this.mIsActive = isActive;
-        this.mLastUpdated = lastUpdated;
-    }
+  public User(String email, String password, Boolean isActive, Date lastUpdated) {
+    this.mEmail = email;
+    this.mPassword = password;
+    this.mIsActive = isActive;
+    this.mLastUpdated = lastUpdated;
+  }
 }

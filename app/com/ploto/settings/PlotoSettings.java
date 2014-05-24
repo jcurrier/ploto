@@ -14,7 +14,7 @@ import play.GlobalSettings;
  * Created by jeff on 5/18/14.
  */
 public class PlotoSettings extends GlobalSettings {
-    private PlotoContext mCtx = null;
+  private PlotoContext mCtx = null;
 
     /*
     private static Injector mInjector = null;
@@ -25,10 +25,10 @@ public class PlotoSettings extends GlobalSettings {
     (*/
 
 
-    @Override
-    public void onStart(Application application) {
-        super.onStart(application);
-        mCtx = new PlotoContext();
+  @Override
+  public void onStart(Application application) {
+    super.onStart(application);
+    mCtx = new PlotoContext();
         /*
             mInjector = Guice.createInjector(new AbstractModule() {
 
@@ -41,5 +41,5 @@ public class PlotoSettings extends GlobalSettings {
                 }
             });
             */
-    }
+  }
 }

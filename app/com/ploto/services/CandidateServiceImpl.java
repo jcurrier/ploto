@@ -4,27 +4,27 @@ package com.ploto.services;
  * Created by jeff on 5/18/14.
  */
 public class CandidateServiceImpl implements CandidateService {
-    private static CandidateServiceImpl mInstance = null;
+  private static CandidateServiceImpl mInstance = null;
 
-    private CandidateServiceImpl() {
+  private CandidateServiceImpl() {
 
+  }
+
+  public static CandidateServiceImpl Instance() {
+
+    // BUGBUG: Rip this out and replace with dependency injection later.
+    if (mInstance == null) {
+      mInstance = new CandidateServiceImpl();
     }
 
-    public static CandidateServiceImpl Instance() {
+    return mInstance;
+  }
 
-        // BUGBUG: Rip this out and replace with dependency injection later.
-        if(mInstance == null) {
-            mInstance = new CandidateServiceImpl();
-        }
+  public void CreateCandidate(Candidate newCandidate) {
 
-        return mInstance;
-    }
+  }
 
-    public void CreateCandidate(Candidate newCandidate) {
+  public void RemoveCandidate(Candidate candidateToRemove) {
 
-    }
-
-    public void RemoveCandidate(Candidate candidateToRemove) {
-
-    }
+  }
 }

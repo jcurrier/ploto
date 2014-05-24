@@ -18,99 +18,99 @@ import java.sql.SQLException;
 @Singleton
 public class JobServiceSqlStore extends BaseSqlStore implements JobServiceStore {
 
-    private final String CREATE_JOB =
-            "INSERT INTO position (id, title, description, location, status) VALUES(?, ?, ?, ?, ?)";
+  private final String CREATE_JOB =
+          "INSERT INTO position (id, title, description, location, status) VALUES(?, ?, ?, ?, ?)";
 
-    private final String REMOVE_JOB = "DELETE FROM position WHERE id = ?";
+  private final String REMOVE_JOB = "DELETE FROM position WHERE id = ?";
 
-    private final String FETCH_JOB = "SELECT * FROM position WHERE id = ? LIMIT 1";
+  private final String FETCH_JOB = "SELECT * FROM position WHERE id = ? LIMIT 1";
 
-    @Inject
-    private JobServiceSqlStore() {
+  @Inject
+  private JobServiceSqlStore() {
 
+  }
+
+  @Override
+  public Position storeJob(Position newPosition) throws StoreException {
+    String positionId = generateUniqueId();
+
+    Connection dbConn = null;
+    try {
+      dbConn = getConnection();
+
+      newPosition.setId(positionId);
+      PreparedStatement ps = dbConn.prepareStatement(CREATE_JOB);
+
+      ps.setString(1, newPosition.getId());
+      ps.setString(2, newPosition.getTitle());
+      ps.setString(3, newPosition.getDescription());
+      ps.setString(4, newPosition.getLocation());
+      ps.setShort(5, newPosition.getStatus());
+
+      int rowCount = ps.executeUpdate();
+      if (rowCount != 1) {
+        throw new StoreException("Failed to create position");
+      }
+
+    } catch (Exception ex) {
+      throw new StoreException("Unable to create position", ex);
+
+    } finally {
     }
 
-    @Override
-    public Position storeJob(Position newPosition) throws StoreException {
-        String positionId = generateUniqueId();
+    return fetchPosition(positionId);
+  }
 
-        Connection dbConn = null;
-        try {
-            dbConn = getConnection();
+  @Override
+  public void removeJob(Position positionToRemove) throws StoreException {
+    Connection dbConn = null;
+    try {
+      dbConn = getConnection();
 
-            newPosition.setId(positionId);
-            PreparedStatement ps = dbConn.prepareStatement(CREATE_JOB);
+      PreparedStatement ps = dbConn.prepareStatement(REMOVE_JOB);
 
-            ps.setString(1, newPosition.getId());
-            ps.setString(2, newPosition.getTitle());
-            ps.setString(3, newPosition.getDescription());
-            ps.setString(4, newPosition.getLocation());
-            ps.setShort(5, newPosition.getStatus());
+      ps.setString(1, positionToRemove.getId());
 
-            int rowCount = ps.executeUpdate();
-            if(rowCount != 1) {
-                throw new StoreException("Failed to create position");
-            }
+      int rowCount = ps.executeUpdate();
+      if (rowCount != 1) {
+        throw new StoreException("Position not found");
+      }
 
-        } catch(Exception ex) {
-            throw new StoreException("Unable to create position", ex);
+    } catch (SQLException ex) {
+      throw new StoreException("Unable to remove position", ex);
+    } finally {
+    }
+  }
 
-        } finally {
-        }
+  @Override
+  public ImmutableList<Position> fetchOpenPositions() throws StoreException {
+    return null;
+  }
 
-        return fetchPosition(positionId);
+  private Position fetchPosition(String id) throws StoreException {
+    Position pos = null;
+    Connection dbConn = null;
+
+    Preconditions.checkArgument(id != null && id.length() > 0, "Invalid position id passed");
+
+    try {
+      dbConn = getConnection();
+
+      PreparedStatement ps = dbConn.prepareStatement(FETCH_JOB);
+      ps.setString(1, id);
+
+      ResultSet results = ps.executeQuery();
+      results.first();
+
+      pos = new Position(results.getString("id"), results.getString("title"), results.getString("description"),
+              results.getString("location"), results.getShort("status"), results.getTimestamp("posted"),
+              results.getTimestamp("last_updated"));
+
+    } catch (Exception ex) {
+      throw new StoreException("Unable to retrieve position", ex);
+    } finally {
     }
 
-    @Override
-    public void removeJob(Position positionToRemove) throws StoreException {
-        Connection dbConn = null;
-        try {
-            dbConn = getConnection();
-
-            PreparedStatement ps = dbConn.prepareStatement(REMOVE_JOB);
-
-            ps.setString(1, positionToRemove.getId());
-
-            int rowCount = ps.executeUpdate();
-            if(rowCount !=1) {
-                throw new StoreException("Position not found");
-            }
-
-        } catch(SQLException ex) {
-            throw new StoreException("Unable to remove position", ex);
-        } finally {
-        }
-    }
-
-    @Override
-    public ImmutableList<Position> fetchOpenPositions() throws StoreException {
-        return null;
-    }
-
-    private Position fetchPosition(String id) throws StoreException {
-        Position pos = null;
-        Connection dbConn = null;
-
-        Preconditions.checkArgument(id != null && id.length() > 0, "Invalid position id passed");
-
-        try {
-            dbConn = getConnection();
-
-            PreparedStatement ps = dbConn.prepareStatement(FETCH_JOB);
-            ps.setString(1, id);
-
-            ResultSet results  = ps.executeQuery();
-            results.first();
-
-            pos = new Position(results.getString("id"), results.getString("title"), results.getString("description"),
-                    results.getString("location"), results.getShort("status"), results.getTimestamp("posted"),
-                    results.getTimestamp("last_updated"));
-
-        } catch(Exception ex) {
-            throw new StoreException("Unable to retrieve position", ex);
-        } finally {
-        }
-
-        return pos;
-    }
+    return pos;
+  }
 }

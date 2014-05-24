@@ -14,30 +14,30 @@ import java.util.Map;
 @Singleton
 public class JobServiceTestStore implements JobServiceStore {
 
-    private Map<String, Position> mJobMap = null;
+  private Map<String, Position> mJobMap = null;
 
-    @Inject
-    private JobServiceTestStore() {
-        System.out.println("In ctor for JobServiceTestStore");
+  @Inject
+  private JobServiceTestStore() {
+    System.out.println("In ctor for JobServiceTestStore");
 
-        mJobMap = new HashMap<String, Position>();
-    }
+    mJobMap = new HashMap<String, Position>();
+  }
 
-    @Override
-    public Position storeJob(Position newPosition) {
+  @Override
+  public Position storeJob(Position newPosition) {
 
-        mJobMap.put(newPosition.getId(), newPosition);
-        return newPosition;
-    }
+    mJobMap.put(newPosition.getId(), newPosition);
+    return newPosition;
+  }
 
-    @Override
-    public void removeJob(Position positionToRemove) {
+  @Override
+  public void removeJob(Position positionToRemove) {
 
-    }
+  }
 
-    @Override
-    public ImmutableList<Position> fetchOpenPositions() {
+  @Override
+  public ImmutableList<Position> fetchOpenPositions() {
 
-        return null;
-    }
+    return null;
+  }
 }

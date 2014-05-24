@@ -12,21 +12,21 @@ import java.sql.SQLException;
  */
 public class BaseSqlStore {
 
-    protected DataSource mDb = null;
+  protected DataSource mDb = null;
 
-    public BaseSqlStore() {
-        mDb = DB.getDataSource("plotodb");
-    }
+  public BaseSqlStore() {
+    mDb = DB.getDataSource("plotodb");
+  }
 
-    protected Connection getConnection() throws SQLException {
-        Connection dbConn = mDb.getConnection();
-        dbConn.setAutoCommit(false);
+  protected Connection getConnection() throws SQLException {
+    Connection dbConn = mDb.getConnection();
+    dbConn.setAutoCommit(false);
 
-        return mDb.getConnection();
-    }
+    return mDb.getConnection();
+  }
 
-    protected String generateUniqueId() {
-        UID uniqueId = new UID();
-        return uniqueId.toString();
-    }
+  protected String generateUniqueId() {
+    UID uniqueId = new UID();
+    return uniqueId.toString();
+  }
 }

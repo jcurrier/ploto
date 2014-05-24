@@ -8,9 +8,9 @@ import com.ploto.services.Position;
  */
 public interface JobServiceStore {
 
-    public Position storeJob(Position newPosition) throws StoreException;
+  public Position storeJob(Position newPosition) throws StoreException;
 
-    public void removeJob(Position positionToRemove) throws StoreException;
+  public void removeJob(Position positionToRemove) throws StoreException;
 
-    public ImmutableList<Position> fetchOpenPositions() throws StoreException;
+  public ImmutableList<Position> fetchOpenPositions() throws StoreException;
 }

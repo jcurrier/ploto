@@ -7,13 +7,13 @@ import com.ploto.services.User;
  */
 public interface UserServiceStore {
 
-    public User createUser(String email, String password) throws StoreException;
+  public User createUser(String email, String password) throws StoreException;
 
-    public void removeUser(String email) throws StoreException;
+  public void removeUser(String email) throws StoreException;
 
-    public boolean authenicateUser(String email, String password) throws StoreException;
+  public boolean authenicateUser(String email, String password) throws StoreException;
 
-    public User fetchUser(String email) throws StoreException;
+  public User fetchUser(String email) throws StoreException;
 
-    public boolean changePassword(String email, String oldPassword, String newPassword) throws StoreException;
+  public boolean changePassword(String email, String oldPassword, String newPassword) throws StoreException;
 }
